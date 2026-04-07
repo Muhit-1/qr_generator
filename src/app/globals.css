@@ -1,0 +1,147 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --brand-green: #66cc99;
+  --brand-green-light: #85d9af;
+  --brand-green-dark: #4db882;
+  --brand-green-muted: #e8f8f1;
+  --white: #ffffff;
+  --text-primary: #0f1923;
+  --text-secondary: #4a5568;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'DM Sans', system-ui, sans-serif;
+  background-color: #f8fafb;
+  color: #0f1923;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #c5d4de;
+  border-radius: 999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #66cc99;
+}
+
+/* Custom input focus ring */
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  ring: none;
+}
+
+/* Color picker styling */
+input[type='color'] {
+  -webkit-appearance: none;
+  appearance: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+input[type='color']::-webkit-color-swatch-wrapper {
+  padding: 0;
+}
+input[type='color']::-webkit-color-swatch {
+  border: none;
+  border-radius: 6px;
+}
+
+/* Range slider */
+input[type='range'] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 999px;
+  background: #e8edf0;
+  outline: none;
+}
+input[type='range']::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #66cc99;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(102, 204, 153, 0.4);
+  transition: transform 0.15s;
+}
+input[type='range']::-webkit-slider-thumb:hover {
+  transform: scale(1.2);
+}
+
+/* QR Preview container */
+.qr-preview-wrapper canvas,
+.qr-preview-wrapper svg {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Animations */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, #f0f4f8 25%, #e8f8f1 50%, #f0f4f8 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Tab active indicator */
+.tab-active {
+  position: relative;
+}
+.tab-active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: #66cc99;
+  border-radius: 999px;
+}
+
+/* Dot shape preview */
+.dot-preview {
+  transition: all 0.2s ease;
+}
+.dot-preview:hover {
+  transform: scale(1.05);
+}
+.dot-preview.selected {
+  border-color: #66cc99 !important;
+  background-color: #e8f8f1;
+}
+
+/* Frame preview */
+.frame-preview.selected {
+  border-color: #66cc99 !important;
+  background-color: #e8f8f1;
+}
