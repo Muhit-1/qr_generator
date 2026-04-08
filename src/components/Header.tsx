@@ -15,9 +15,6 @@ export default function Header() {
               <span className="font-display font-bold text-xl text-text-primary tracking-tight">
                 QR Studio
               </span>
-              <span className="hidden sm:inline text-xs text-text-muted ml-2 font-sans">
-                Free QR Code Generator
-              </span>
             </div>
           </div>
 

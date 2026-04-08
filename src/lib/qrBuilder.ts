@@ -3,25 +3,29 @@ import { QRTypeId, QRFormData } from '@/types/qr.types'
 export function buildQRData(type: QRTypeId, data: QRFormData): string {
   switch (type) {
     case 'url':
-      return data.url || 'https://example.com'
+      return data.url || ''
 
     case 'text':
       return data.text || ''
 
     case 'email': {
+      if (!data.emailTo) return ''
       const parts: string[] = []
       if (data.emailSubject) parts.push(`subject=${encodeURIComponent(data.emailSubject)}`)
       if (data.emailBody) parts.push(`body=${encodeURIComponent(data.emailBody)}`)
-      return `mailto:${data.emailTo || ''}${parts.length ? '?' + parts.join('&') : ''}`
+      return `mailto:${data.emailTo}${parts.length ? '?' + parts.join('&') : ''}`
     }
 
     case 'phone':
-      return `tel:${data.phone || ''}`
+      if (!data.phone) return ''
+      return `tel:${data.phone}`
 
     case 'sms':
-      return `sms:${data.smsPhone || ''}${data.smsMessage ? `?body=${encodeURIComponent(data.smsMessage)}` : ''}`
+      if (!data.smsPhone) return ''
+      return `sms:${data.smsPhone}${data.smsMessage ? `?body=${encodeURIComponent(data.smsMessage)}` : ''}`
 
-    case 'vcard':
+    case 'vcard': {
+      if (!data.vcardFirstName && !data.vcardLastName) return ''
       return [
         'BEGIN:VCARD',
         'VERSION:3.0',
@@ -37,36 +41,43 @@ export function buildQRData(type: QRTypeId, data: QRFormData): string {
       ]
         .filter(Boolean)
         .join('\n')
+    }
 
     case 'wifi':
-      return `WIFI:T:${data.wifiSecurity || 'WPA'};S:${data.wifiSSID || ''};P:${data.wifiPassword || ''};H:${data.wifiHidden ? 'true' : 'false'};;`
+      if (!data.wifiSSID) return ''
+      return `WIFI:T:${data.wifiSecurity || 'WPA'};S:${data.wifiSSID};P:${data.wifiPassword || ''};H:${data.wifiHidden ? 'true' : 'false'};;`
 
     case 'location':
-      return `geo:${data.locationLat || '0'},${data.locationLng || '0'}${data.locationLabel ? `?q=${encodeURIComponent(data.locationLabel)}` : ''}`
+      if (!data.locationLat || !data.locationLng) return ''
+      return `geo:${data.locationLat},${data.locationLng}${data.locationLabel ? `?q=${encodeURIComponent(data.locationLabel)}` : ''}`
 
     case 'facebook':
-      return data.facebookUrl || 'https://facebook.com/'
+      return data.facebookUrl || ''
 
     case 'twitter':
-      return `https://twitter.com/${data.twitterUsername || ''}`
+      if (!data.twitterUsername) return ''
+      return `https://twitter.com/${data.twitterUsername}`
 
     case 'instagram':
-      return `https://instagram.com/${data.instagramUsername || ''}`
+      if (!data.instagramUsername) return ''
+      return `https://instagram.com/${data.instagramUsername}`
 
     case 'youtube':
-      return data.youtubeUrl || 'https://youtube.com/'
+      return data.youtubeUrl || ''
 
     case 'whatsapp': {
-      const phone = (data.whatsappPhone || '').replace(/\D/g, '')
+      if (!data.whatsappPhone) return ''
+      const phone = (data.whatsappPhone).replace(/\D/g, '')
       const msg = data.whatsappMessage ? `?text=${encodeURIComponent(data.whatsappMessage)}` : ''
       return `https://wa.me/${phone}${msg}`
     }
 
     case 'event': {
+      if (!data.eventTitle) return ''
       const formatDate = (d: string) => d?.replace(/[-:]/g, '').replace('T', 'T') || ''
       return [
         'BEGIN:VEVENT',
-        `SUMMARY:${data.eventTitle || ''}`,
+        `SUMMARY:${data.eventTitle}`,
         data.eventLocation ? `LOCATION:${data.eventLocation}` : '',
         data.eventStart ? `DTSTART:${formatDate(data.eventStart)}` : '',
         data.eventEnd ? `DTEND:${formatDate(data.eventEnd)}` : '',
@@ -78,16 +89,16 @@ export function buildQRData(type: QRTypeId, data: QRFormData): string {
     }
 
     case 'payment': {
+      if (!data.paymentAddress) return ''
       if (data.paymentType === 'bitcoin') {
-        return `bitcoin:${data.paymentAddress || ''}${data.paymentAmount ? `?amount=${data.paymentAmount}` : ''}`
+        return `bitcoin:${data.paymentAddress}${data.paymentAmount ? `?amount=${data.paymentAmount}` : ''}`
       }
       if (data.paymentType === 'upi') {
-        const parts = [`pa=${data.paymentAddress || ''}`, `am=${data.paymentAmount || '0'}`]
+        const parts = [`pa=${data.paymentAddress}`, `am=${data.paymentAmount || '0'}`]
         if (data.paymentNote) parts.push(`tn=${encodeURIComponent(data.paymentNote)}`)
         return `upi://pay?${parts.join('&')}`
       }
-      // PayPal
-      return `https://paypal.me/${data.paymentAddress || ''}${data.paymentAmount ? `/${data.paymentAmount}` : ''}`
+      return `https://paypal.me/${data.paymentAddress}${data.paymentAmount ? `/${data.paymentAmount}` : ''}`
     }
 
     default:
