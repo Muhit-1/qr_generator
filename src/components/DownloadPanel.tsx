@@ -11,9 +11,9 @@ interface Props {
 }
 
 const FORMATS: { format: DownloadFormat; label: string; desc: string; icon: string }[] = [
-  { format: 'png', label: 'PNG', desc: 'Best for web & print', icon: '🖼️' },
-  { format: 'svg', label: 'SVG', desc: 'Scalable vector', icon: '✏️' },
-  { format: 'jpeg', label: 'JPEG', desc: 'Smaller file size', icon: '📷' },
+  { format: 'png', label: 'PNG', desc: 'Best for web & print', icon: '' },
+  { format: 'svg', label: 'SVG', desc: 'Scalable vector', icon: '' },
+  { format: 'jpeg', label: 'JPEG', desc: 'Smaller file size', icon: '' },
 ]
 
 export default function DownloadPanel({ qrInstance, size, disabled }: Props) {
@@ -30,7 +30,7 @@ export default function DownloadPanel({ qrInstance, size, disabled }: Props) {
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-surface-border p-5 shadow-card space-y-4">
+    <div className="bg-white rounded-2xl border border-surface-border p-3 shadow-card space-y-4">
       <h2 className="font-display font-semibold text-sm text-text-muted uppercase tracking-widest">
         Download
       </h2>

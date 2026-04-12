@@ -206,10 +206,7 @@ export default function QRInputForm({ type, data, onChange }: Props) {
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-surface-border p-5 shadow-card space-y-4">
-      <h2 className="font-display font-semibold text-sm text-text-muted uppercase tracking-widest">
-        Content
-      </h2>
+    <div className="space-y-4">
       {forms[type]}
     </div>
   )
