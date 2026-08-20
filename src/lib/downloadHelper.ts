@@ -94,7 +94,7 @@ function saveBlob(blob: Blob, filename: string) {
 async function ensureDisplayFont(pixelSize: number) {
   if (!document.fonts?.load) return
   try {
-    await document.fonts.load(`700 ${pixelSize}px Syne`)
+    await document.fonts.load(`700 ${pixelSize}px "Bricolage Grotesque"`)
   } catch {
     return
   }
@@ -151,7 +151,7 @@ async function rasterise(
     if (metrics.labelBlock > 0) {
       await ensureDisplayFont(metrics.labelSize)
       ctx.fillStyle = frame.color
-      ctx.font = `700 ${metrics.labelSize}px Syne, "DM Sans", system-ui, sans-serif`
+      ctx.font = `700 ${metrics.labelSize}px "Bricolage Grotesque", "DM Sans", system-ui, sans-serif`
       ctx.textAlign = 'center'
       ctx.textBaseline = 'middle'
       const letterSpacing = ctx as CanvasRenderingContext2D & { letterSpacing?: string }
@@ -205,7 +205,7 @@ async function composeSvg(
     metrics.labelBlock > 0
       ? `<text x="${metrics.total / 2}" y="${
           metrics.total + metrics.labelGap + metrics.labelSize
-        }" text-anchor="middle" font-family="Syne, 'DM Sans', system-ui, sans-serif" font-weight="700" font-size="${
+        }" text-anchor="middle" font-family="Bricolage Grotesque, DM Sans, system-ui, sans-serif" font-weight="700" font-size="${
           metrics.labelSize
         }" letter-spacing="${Math.round(metrics.labelSize * 0.1)}" fill="${frame.color}">${escapeXml(
           frame.label.trim()
