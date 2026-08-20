@@ -20,9 +20,11 @@ const HIGHLIGHTS = [
   { icon: Download, label: 'PNG, SVG, JPG' },
 ]
 
+const DEFAULT_FORM_DATA: QRFormData = { url: 'https://github.com/Muhit-1' }
+
 export default function Home() {
   const [selectedType, setSelectedType] = useState<QRTypeId>('url')
-  const [formData, setFormData] = useState<QRFormData>({})
+  const [formData, setFormData] = useState<QRFormData>(DEFAULT_FORM_DATA)
   const [customization, setCustomization] = useState<QRCustomization>(DEFAULT_CUSTOMIZATION)
   const [qrInstance, setQRInstance] = useState<QRInstance | null>(null)
 
@@ -44,26 +46,23 @@ export default function Home() {
     <div className="flex min-h-screen flex-col bg-surface-gray">
       <Header />
 
-      <section className="border-b border-surface-border bg-gradient-to-b from-brand-green-subtle via-brand-green-subtle to-white px-4 py-12 sm:px-6 lg:px-8">
+      <section className="border-b border-surface-border bg-gradient-to-b from-brand-green-subtle to-white px-4 py-6 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-3xl text-center">
-          <p className="text-label font-semibold uppercase tracking-[0.18em] text-brand-green-dark">
-            Free QR code generator
-          </p>
-          <h1 className="mt-4 font-display text-[clamp(2.15rem,5vw,3.25rem)] font-extrabold leading-[1.08] tracking-tight text-text-primary">
+          <h1 className="font-display text-[clamp(1.5rem,3vw,2rem)] font-extrabold leading-tight tracking-tight text-text-primary">
             Make a QR code people can actually scan
           </h1>
-          <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-text-secondary">
-            Pick what the code should do, style it to match your brand, and download it at full
-            resolution. Nothing is uploaded and nothing is watermarked.
+          <p className="mx-auto mt-2 max-w-xl text-[0.9375rem] leading-snug text-text-secondary">
+            Style it to match your brand and download it at full resolution. Nothing is uploaded and
+            nothing is watermarked.
           </p>
 
-          <ul className="mt-8 flex flex-wrap items-center justify-center gap-2.5">
+          <ul className="mt-4 flex flex-wrap items-center justify-center gap-2">
             {HIGHLIGHTS.map(({ icon: Icon, label }) => (
               <li
                 key={label}
-                className="flex items-center gap-2 rounded-full border border-surface-border bg-white px-4 py-2 text-micro font-semibold text-text-secondary shadow-sm"
+                className="flex items-center gap-1.5 rounded-full border border-surface-border bg-white px-3 py-1.5 text-[0.8125rem] font-semibold text-text-secondary shadow-sm"
               >
-                <Icon size={16} strokeWidth={2.2} className="text-brand-green-dark" aria-hidden="true" />
+                <Icon size={14} strokeWidth={2.2} className="text-brand-green-dark" aria-hidden="true" />
                 {label}
               </li>
             ))}
@@ -76,7 +75,7 @@ export default function Home() {
           <div className="flex flex-col gap-6 lg:col-span-3">
             <section className="overflow-hidden rounded-2xl border border-surface-border bg-white shadow-card">
               <div className="border-b border-surface-border px-5 pb-4 pt-5">
-                <h2 className="text-label font-bold uppercase tracking-[0.14em] text-text-muted">
+                <h2 className="font-display text-label font-bold uppercase tracking-[0.14em] text-text-muted">
                   1. Choose a type
                 </h2>
                 <div className="mt-4 flex flex-wrap gap-2" role="group" aria-label="QR code type">
