@@ -1,104 +1,157 @@
 import { QRTypeId, QRFormData } from '@/types/qr.types'
 
+function escapeWifi(value: string): string {
+  return value.replace(/([\\;,:"])/g, '\\$1')
+}
+
+function escapeIcal(value: string): string {
+  return value
+    .replace(/\\/g, '\\\\')
+    .replace(/;/g, '\\;')
+    .replace(/,/g, '\\,')
+    .replace(/\r?\n/g, '\\n')
+}
+
+function icalDate(value: string): string {
+  if (!value) return ''
+  return `${value.replace(/[-:]/g, '').slice(0, 15)}00`.slice(0, 15)
+}
+
+function joinLines(lines: (string | false | undefined)[]): string {
+  return lines.filter(Boolean).join('\r\n')
+}
+
 export function buildQRData(type: QRTypeId, data: QRFormData): string {
   switch (type) {
     case 'url':
-      return data.url || ''
+      return data.url?.trim() || ''
 
     case 'text':
       return data.text || ''
 
     case 'email': {
-      if (!data.emailTo) return ''
-      const parts: string[] = []
-      if (data.emailSubject) parts.push(`subject=${encodeURIComponent(data.emailSubject)}`)
-      if (data.emailBody) parts.push(`body=${encodeURIComponent(data.emailBody)}`)
-      return `mailto:${data.emailTo}${parts.length ? '?' + parts.join('&') : ''}`
+      const to = data.emailTo?.trim()
+      if (!to) return ''
+      const params: string[] = []
+      if (data.emailSubject) params.push(`subject=${encodeURIComponent(data.emailSubject)}`)
+      if (data.emailBody) params.push(`body=${encodeURIComponent(data.emailBody)}`)
+      return `mailto:${to}${params.length ? `?${params.join('&')}` : ''}`
     }
 
-    case 'phone':
-      if (!data.phone) return ''
-      return `tel:${data.phone}`
+    case 'phone': {
+      const phone = data.phone?.trim()
+      return phone ? `tel:${phone}` : ''
+    }
 
-    case 'sms':
-      if (!data.smsPhone) return ''
-      return `sms:${data.smsPhone}${data.smsMessage ? `?body=${encodeURIComponent(data.smsMessage)}` : ''}`
+    case 'sms': {
+      const phone = data.smsPhone?.trim()
+      if (!phone) return ''
+      const body = data.smsMessage ? `?body=${encodeURIComponent(data.smsMessage)}` : ''
+      return `sms:${phone}${body}`
+    }
 
     case 'vcard': {
-      if (!data.vcardFirstName && !data.vcardLastName) return ''
-      return [
+      const first = data.vcardFirstName?.trim() || ''
+      const last = data.vcardLastName?.trim() || ''
+      if (!first && !last) return ''
+      return joinLines([
         'BEGIN:VCARD',
         'VERSION:3.0',
-        `N:${data.vcardLastName || ''};${data.vcardFirstName || ''};;;`,
-        `FN:${data.vcardFirstName || ''} ${data.vcardLastName || ''}`,
-        data.vcardOrg ? `ORG:${data.vcardOrg}` : '',
-        data.vcardTitle ? `TITLE:${data.vcardTitle}` : '',
-        data.vcardPhone ? `TEL;TYPE=CELL:${data.vcardPhone}` : '',
-        data.vcardEmail ? `EMAIL:${data.vcardEmail}` : '',
-        data.vcardWebsite ? `URL:${data.vcardWebsite}` : '',
-        data.vcardAddress ? `ADR;TYPE=WORK:;;${data.vcardAddress};;;;` : '',
+        `N:${escapeIcal(last)};${escapeIcal(first)};;;`,
+        `FN:${escapeIcal([first, last].filter(Boolean).join(' '))}`,
+        data.vcardOrg && `ORG:${escapeIcal(data.vcardOrg)}`,
+        data.vcardTitle && `TITLE:${escapeIcal(data.vcardTitle)}`,
+        data.vcardPhone && `TEL;TYPE=CELL:${escapeIcal(data.vcardPhone)}`,
+        data.vcardEmail && `EMAIL;TYPE=INTERNET:${escapeIcal(data.vcardEmail)}`,
+        data.vcardWebsite && `URL:${escapeIcal(data.vcardWebsite)}`,
+        data.vcardAddress && `ADR;TYPE=WORK:;;${escapeIcal(data.vcardAddress)};;;;`,
         'END:VCARD',
-      ]
-        .filter(Boolean)
-        .join('\n')
+      ])
     }
 
-    case 'wifi':
-      if (!data.wifiSSID) return ''
-      return `WIFI:T:${data.wifiSecurity || 'WPA'};S:${data.wifiSSID};P:${data.wifiPassword || ''};H:${data.wifiHidden ? 'true' : 'false'};;`
+    case 'wifi': {
+      const ssid = data.wifiSSID?.trim()
+      if (!ssid) return ''
+      const security = data.wifiSecurity || 'WPA'
+      const password = security === 'nopass' ? '' : data.wifiPassword || ''
+      return `WIFI:T:${security};S:${escapeWifi(ssid)};P:${escapeWifi(password)};H:${
+        data.wifiHidden ? 'true' : 'false'
+      };;`
+    }
 
-    case 'location':
-      if (!data.locationLat || !data.locationLng) return ''
-      return `geo:${data.locationLat},${data.locationLng}${data.locationLabel ? `?q=${encodeURIComponent(data.locationLabel)}` : ''}`
+    case 'location': {
+      const lat = data.locationLat?.trim()
+      const lng = data.locationLng?.trim()
+      if (!lat || !lng) return ''
+      const label = data.locationLabel
+        ? `?q=${lat},${lng}(${encodeURIComponent(data.locationLabel)})`
+        : ''
+      return `geo:${lat},${lng}${label}`
+    }
 
     case 'facebook':
-      return data.facebookUrl || ''
+      return data.facebookUrl?.trim() || ''
 
-    case 'twitter':
-      if (!data.twitterUsername) return ''
-      return `https://twitter.com/${data.twitterUsername}`
+    case 'twitter': {
+      const handle = data.twitterUsername?.trim().replace(/^@/, '')
+      return handle ? `https://twitter.com/${handle}` : ''
+    }
 
-    case 'instagram':
-      if (!data.instagramUsername) return ''
-      return `https://instagram.com/${data.instagramUsername}`
+    case 'instagram': {
+      const handle = data.instagramUsername?.trim().replace(/^@/, '')
+      return handle ? `https://instagram.com/${handle}` : ''
+    }
 
     case 'youtube':
-      return data.youtubeUrl || ''
+      return data.youtubeUrl?.trim() || ''
 
     case 'whatsapp': {
-      if (!data.whatsappPhone) return ''
-      const phone = (data.whatsappPhone).replace(/\D/g, '')
-      const msg = data.whatsappMessage ? `?text=${encodeURIComponent(data.whatsappMessage)}` : ''
-      return `https://wa.me/${phone}${msg}`
+      const phone = data.whatsappPhone?.replace(/\D/g, '')
+      if (!phone) return ''
+      const text = data.whatsappMessage ? `?text=${encodeURIComponent(data.whatsappMessage)}` : ''
+      return `https://wa.me/${phone}${text}`
     }
 
     case 'event': {
-      if (!data.eventTitle) return ''
-      const formatDate = (d: string) => d?.replace(/[-:]/g, '').replace('T', 'T') || ''
-      return [
+      const title = data.eventTitle?.trim()
+      if (!title) return ''
+      return joinLines([
+        'BEGIN:VCALENDAR',
+        'VERSION:2.0',
         'BEGIN:VEVENT',
-        `SUMMARY:${data.eventTitle}`,
-        data.eventLocation ? `LOCATION:${data.eventLocation}` : '',
-        data.eventStart ? `DTSTART:${formatDate(data.eventStart)}` : '',
-        data.eventEnd ? `DTEND:${formatDate(data.eventEnd)}` : '',
-        data.eventDescription ? `DESCRIPTION:${data.eventDescription}` : '',
+        `SUMMARY:${escapeIcal(title)}`,
+        data.eventLocation && `LOCATION:${escapeIcal(data.eventLocation)}`,
+        data.eventStart && `DTSTART:${icalDate(data.eventStart)}`,
+        data.eventEnd && `DTEND:${icalDate(data.eventEnd)}`,
+        data.eventDescription && `DESCRIPTION:${escapeIcal(data.eventDescription)}`,
         'END:VEVENT',
-      ]
-        .filter(Boolean)
-        .join('\n')
+        'END:VCALENDAR',
+      ])
     }
 
     case 'payment': {
-      if (!data.paymentAddress) return ''
+      const address = data.paymentAddress?.trim()
+      if (!address) return ''
+      const amount = data.paymentAmount?.trim()
+      const currency = data.paymentCurrency?.trim().toUpperCase()
+
       if (data.paymentType === 'bitcoin') {
-        return `bitcoin:${data.paymentAddress}${data.paymentAmount ? `?amount=${data.paymentAmount}` : ''}`
+        const params: string[] = []
+        if (amount) params.push(`amount=${amount}`)
+        if (data.paymentNote) params.push(`message=${encodeURIComponent(data.paymentNote)}`)
+        return `bitcoin:${address}${params.length ? `?${params.join('&')}` : ''}`
       }
+
       if (data.paymentType === 'upi') {
-        const parts = [`pa=${data.paymentAddress}`, `am=${data.paymentAmount || '0'}`]
-        if (data.paymentNote) parts.push(`tn=${encodeURIComponent(data.paymentNote)}`)
-        return `upi://pay?${parts.join('&')}`
+        const params = [`pa=${encodeURIComponent(address)}`]
+        if (amount) params.push(`am=${amount}`)
+        if (currency) params.push(`cu=${currency}`)
+        if (data.paymentNote) params.push(`tn=${encodeURIComponent(data.paymentNote)}`)
+        return `upi://pay?${params.join('&')}`
       }
-      return `https://paypal.me/${data.paymentAddress}${data.paymentAmount ? `/${data.paymentAmount}` : ''}`
+
+      const suffix = amount ? `/${amount}${currency || ''}` : ''
+      return `https://paypal.me/${address.replace(/^@/, '')}${suffix}`
     }
 
     default:

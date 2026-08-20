@@ -1,33 +1,32 @@
+import { ShieldCheck } from 'lucide-react'
+import { QRMark } from './ModuleArt'
+
 export default function Header() {
   return (
-    <header className="bg-white border-b border-surface-border sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          {/* Logo */}
-          <div className="flex items-center gap-3">
-            <div
-              className="w-9 h-9 rounded-xl flex items-center justify-center text-white font-display font-bold text-sm shadow-green"
-              style={{ background: 'linear-gradient(135deg, #66cc99, #4db882)' }}
-            >
-              QR
-            </div>
-            <div>
-              <span className="font-display font-bold text-xl text-text-primary tracking-tight">
-                QR Studio
-              </span>
-            </div>
-          </div>
+    <header className="sticky top-0 z-50 border-b border-surface-border bg-white/90 backdrop-blur">
+      <div className="mx-auto flex h-[4.5rem] max-w-app items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center gap-3">
+          <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-brand-green-dark text-white shadow-green">
+            <QRMark size={26} />
+          </span>
+          <span className="flex flex-col leading-none">
+            <span className="font-display text-xl font-bold tracking-tight text-text-primary">
+              QR Studio
+            </span>
+            <span className="mt-1 text-micro font-medium text-text-muted">
+              Codes made in your browser
+            </span>
+          </span>
+        </div>
 
-          {/* Right side badges */}
-          <div className="flex items-center gap-2">
-            <span className="hidden sm:flex items-center gap-1.5 text-xs font-medium text-brand-green bg-brand-green-muted px-3 py-1.5 rounded-full">
-              <span className="w-1.5 h-1.5 bg-brand-green rounded-full animate-pulse" />
-              100% Free
-            </span>
-            <span className="hidden sm:flex items-center gap-1.5 text-xs font-medium text-text-secondary bg-surface-gray px-3 py-1.5 rounded-full border border-surface-border">
-              No Sign Up
-            </span>
-          </div>
+        <div className="flex items-center gap-2">
+          <span className="hidden items-center gap-2 rounded-full border border-brand-green/40 bg-brand-green-muted px-4 py-2 text-micro font-semibold text-brand-green-dark sm:flex">
+            <ShieldCheck size={16} strokeWidth={2.2} aria-hidden="true" />
+            Nothing leaves this device
+          </span>
+          <span className="rounded-full border border-surface-border bg-surface-gray px-4 py-2 text-micro font-semibold text-text-secondary">
+            Free
+          </span>
         </div>
       </div>
     </header>

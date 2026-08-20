@@ -1,27 +1,29 @@
+import { QRMark } from './ModuleArt'
+
+const FACTS = ['No account', 'No watermark', 'No tracking', 'No upload']
+
 export default function Footer() {
   return (
-    <footer className="border-t border-surface-border bg-white mt-16">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2.5">
-            <div
-              className="w-7 h-7 rounded-lg flex items-center justify-center text-white font-display font-bold text-xs"
-              style={{ background: 'linear-gradient(135deg, #66cc99, #4db882)' }}
-            >
-              QR
-            </div>
-            <span className="font-display font-semibold text-text-primary">QR Studio</span>
-          </div>
-
-          <div className="flex items-center gap-6 text-xs text-text-muted">
-            <span>100% Free · No Sign Up · No Watermark</span>
-          </div>
-
-          <div className="flex items-center gap-1.5 text-xs text-text-muted">
-            <span>All QR codes generated locally in your browser</span>
-            <span className="text-brand-green">🔒</span>
-          </div>
+    <footer className="mt-16 border-t border-surface-border bg-white">
+      <div className="mx-auto flex max-w-app flex-col gap-6 px-4 py-10 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
+        <div className="flex items-center gap-3">
+          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-green-dark text-white">
+            <QRMark size={22} />
+          </span>
+          <span className="font-display text-lg font-bold text-text-primary">QR Studio</span>
         </div>
+
+        <ul className="flex flex-wrap items-center gap-x-6 gap-y-2">
+          {FACTS.map((fact) => (
+            <li key={fact} className="text-micro font-medium text-text-secondary">
+              {fact}
+            </li>
+          ))}
+        </ul>
+
+        <p className="text-micro text-text-muted">
+          Every code is built locally and never sent to a server.
+        </p>
       </div>
     </footer>
   )
