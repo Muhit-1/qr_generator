@@ -2,6 +2,9 @@ import type { Metadata, Viewport } from 'next'
 import React from 'react'
 import './globals.css'
 
+// Matches the basePath set in next.config.js for the GitHub Pages build.
+const basePath = process.env.GITHUB_PAGES === 'true' ? '/qr_generator' : ''
+
 export const metadata: Metadata = {
   title: 'QR Studio — Free QR Code Generator',
   description:
@@ -9,7 +12,7 @@ export const metadata: Metadata = {
   keywords: ['qr code generator', 'free qr code', 'custom qr code', 'wifi qr code', 'vcard qr code'],
   applicationName: 'QR Studio',
   icons: {
-    icon: [{ url: '/icon.svg', type: 'image/svg+xml' }],
+    icon: [{ url: `${basePath}/icon.svg`, type: 'image/svg+xml' }],
   },
   openGraph: {
     title: 'QR Studio — Free QR Code Generator',

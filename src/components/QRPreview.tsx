@@ -113,7 +113,7 @@ export default function QRPreview({ data, customization: c, onQRReady }: Props) 
 
   return (
     <section className="rounded-2xl border border-surface-border bg-white p-6 shadow-card">
-      <h2 className="text-label font-bold uppercase tracking-[0.14em] text-text-muted">
+      <h2 className="font-display text-label font-bold uppercase tracking-[0.14em] text-text-muted">
         3. Preview
       </h2>
 

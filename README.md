@@ -4,6 +4,8 @@ A QR code generator that runs entirely in the browser. Choose what the code shou
 do, style it to match your brand, and download it as PNG, SVG or JPG. Nothing is
 uploaded to a server and nothing is watermarked.
 
+**Live demo: [muhit-1.github.io/qr_generator](https://muhit-1.github.io/qr_generator/)**
+
 ## Screenshot
 
 <!-- Replace the file below with your own capture: save it to docs/screenshot.png -->
@@ -57,6 +59,18 @@ Open http://localhost:3000 in your browser.
 `next.config.js` sets `output: 'export'`, so `npm run build` writes a fully static
 site to `out/`. Upload that folder to any static host, such as GitHub Pages,
 Netlify, Vercel or Cloudflare Pages. No server runtime is required.
+
+### GitHub Pages
+
+[.github/workflows/deploy.yml](.github/workflows/deploy.yml) builds and publishes
+the site to GitHub Pages automatically on every push to `main`. To enable it on a
+fork or new repo, open **Settings → Pages** and set **Source** to **GitHub
+Actions** — no further configuration is needed.
+
+The workflow builds with `GITHUB_PAGES=true`, which tells `next.config.js` to set
+`basePath`/`assetPrefix` to `/qr_generator` so assets resolve correctly under
+`https://<user>.github.io/qr_generator/`. Running `npm run build` locally without
+that variable produces a build for hosting at a domain root instead.
 
 ## Project structure
 

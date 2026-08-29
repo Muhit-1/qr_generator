@@ -42,7 +42,7 @@ export default function DownloadPanel({ qrInstance, customization: c, disabled }
 
   return (
     <section className="space-y-4 rounded-2xl border border-surface-border bg-white p-5 shadow-card">
-      <h2 className="text-label font-bold uppercase tracking-[0.14em] text-text-muted">
+      <h2 className="font-display text-label font-bold uppercase tracking-[0.14em] text-text-muted">
         4. Download
       </h2>
 
