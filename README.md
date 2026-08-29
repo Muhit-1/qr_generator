@@ -1,10 +1,12 @@
 # QR Studio
 
+[![Live demo](https://img.shields.io/badge/live%20demo-muhit--1.github.io%2Fqr__generator-66cc99?style=for-the-badge)](https://muhit-1.github.io/qr_generator/)
+
 A QR code generator that runs entirely in the browser. Choose what the code should
 do, style it to match your brand, and download it as PNG, SVG or JPG. Nothing is
 uploaded to a server and nothing is watermarked.
 
-**Live demo: [muhit-1.github.io/qr_generator](https://muhit-1.github.io/qr_generator/)**
+**Try it now: [muhit-1.github.io/qr_generator](https://muhit-1.github.io/qr_generator/)** — no install, runs straight in your browser.
 
 ## Screenshot
 
